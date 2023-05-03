@@ -1,6 +1,6 @@
 package org.amex.controllers.responses;
 
-import org.amex.models.Order;
+import org.amex.models.OrderLine;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -9,19 +9,19 @@ public class GetOrdersResponse {
 
     private BigDecimal totalOrderCost;
 
-    private List<Order> orderList;
+    private List<OrderLine> orderLineList;
 
     public GetOrdersResponse() {
     }
 
-    public GetOrdersResponse(final BigDecimal totalOrderCost, final List<Order> orderList) {
+    public GetOrdersResponse(final BigDecimal totalOrderCost, final List<OrderLine> orderLineList) {
         this.totalOrderCost = totalOrderCost;
-        this.orderList = orderList;
+        this.orderLineList = orderLineList;
     }
 
-    public List<Order> getOrderList() {
+    public List<OrderLine> getOrderList() {
         // Preserve immutability
-        return List.copyOf(orderList);
+        return List.copyOf(orderLineList);
     }
 
     public BigDecimal getTotalOrderCost() {

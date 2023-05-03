@@ -6,18 +6,21 @@ import java.util.Objects;
 
 public class Orders {
 
-    private final List<Order> orderList;
+    private final List<OrderLine> orderLineList;
 
-    public Orders(final List<Order> orderList) {
-        this.orderList = orderList;
+    private BigDecimal totalOrderCost;
+
+    public Orders(final BigDecimal totalOrderCost, final List<OrderLine> orderLineList) {
+        this.totalOrderCost = totalOrderCost;
+        this.orderLineList = orderLineList;
     }
 
-    public List<Order> getOrderList() {
-        return orderList;
+    public List<OrderLine> getOrderList() {
+        return orderLineList;
     }
 
     public BigDecimal getTotalOrderCost() {
-        return orderList.stream().map(Order::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return totalOrderCost;
     }
 
     @Override
@@ -25,18 +28,19 @@ public class Orders {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Orders orders = (Orders) o;
-        return Objects.equals(orderList, orders.orderList);
+        return Objects.equals(orderLineList, orders.orderLineList) && Objects.equals(totalOrderCost, orders.totalOrderCost);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderList);
+        return Objects.hash(orderLineList, totalOrderCost);
     }
 
     @Override
     public String toString() {
         return "Orders{" +
-                "orderList=" + orderList +
+                "orderLineList=" + orderLineList +
+                ", totalOrderCost=" + totalOrderCost +
                 '}';
     }
 }
