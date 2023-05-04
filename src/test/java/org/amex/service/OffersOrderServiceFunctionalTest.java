@@ -30,8 +30,8 @@ public class OffersOrderServiceFunctionalTest {
         orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
         orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
 
-        Orders orders = orderService.generateOrder(orderLineList);
+        Orders orders = orderService.createOrder(orderLineList);
         assertEquals(new BigDecimal("1.95"), orders.getTotalOrderCost());
-        assertEquals(orderLineList, orders.getOrderList());
+        assertEquals(orderLineList, orders.getOrderLines());
     }
 }

@@ -6,16 +6,25 @@ import java.util.Objects;
 
 public class Orders {
 
+    private long orderId;
+
     private final List<OrderLine> orderLineList;
 
     private BigDecimal totalOrderCost;
 
     public Orders(final BigDecimal totalOrderCost, final List<OrderLine> orderLineList) {
+        this.orderId = orderId;
         this.totalOrderCost = totalOrderCost;
         this.orderLineList = orderLineList;
     }
 
-    public List<OrderLine> getOrderList() {
+    public Orders(final long orderId, final BigDecimal totalOrderCost, final List<OrderLine> orderLineList) {
+        this.orderId = orderId;
+        this.totalOrderCost = totalOrderCost;
+        this.orderLineList = orderLineList;
+    }
+
+    public List<OrderLine> getOrderLines() {
         return orderLineList;
     }
 
@@ -23,23 +32,28 @@ public class Orders {
         return totalOrderCost;
     }
 
+    public long getOrderId() {
+        return orderId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Orders orders = (Orders) o;
-        return Objects.equals(orderLineList, orders.orderLineList) && Objects.equals(totalOrderCost, orders.totalOrderCost);
+        return orderId == orders.orderId && Objects.equals(orderLineList, orders.orderLineList) && Objects.equals(totalOrderCost, orders.totalOrderCost);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(orderLineList, totalOrderCost);
+        return Objects.hash(orderId, orderLineList, totalOrderCost);
     }
 
     @Override
     public String toString() {
         return "Orders{" +
-                "orderLineList=" + orderLineList +
+                "orderId=" + orderId +
+                ", orderLineList=" + orderLineList +
                 ", totalOrderCost=" + totalOrderCost +
                 '}';
     }

@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -48,13 +49,12 @@ public class OrderLineControllerFunctionalTest {
 
 
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
 
     @Test
     public void test_Post_Order_Returns_Correct_Summary_And_Total_Price() throws Exception {
-
         SimpleModule module = new SimpleModule();
         module.addSerializer(BigDecimal.class, new ToStringSerializer());
         objectMapper.registerModule(module);
@@ -65,7 +65,7 @@ public class OrderLineControllerFunctionalTest {
 
 
         Orders orders = new Orders(new BigDecimal("0.85"), orderLineList);
-        when(orderService.generateOrder(orderLineList)).thenReturn(orders);
+        when(orderService.createOrder(orderLineList)).thenReturn(orders);
 
 
         OrderRequest orderRequest = new OrderRequest(orderLineList);
@@ -82,6 +82,51 @@ public class OrderLineControllerFunctionalTest {
                 .andExpect(jsonPath("$.orderList[1].price").value("0.25"))
                 .andExpect(jsonPath("$.orderList[1].fruitProduct").value("ORANGE"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+    }
+
+    @Test
+    public void test_Get_Order_Returns_Correctly() throws Exception {
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(BigDecimal.class, new ToStringSerializer());
+        objectMapper.registerModule(module);
+
+        List<OrderLine> orderLineList = new ArrayList<>();
+        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
+        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+
+
+        Orders orders = new Orders(new BigDecimal("0.85"), orderLineList);
+        when(orderService.getOrder(1000)).thenReturn(orders);
+
+
+        this.mockMvc.perform(
+                        get("/orders/order/1000")
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.totalOrderCost").value("0.85"))
+                .andExpect(jsonPath("$.orderList[0].price").value("0.60"))
+                .andExpect(jsonPath("$.orderList[0].fruitProduct").value("APPLE"))
+                .andExpect(jsonPath("$.orderList[1].price").value("0.25"))
+                .andExpect(jsonPath("$.orderList[1].fruitProduct").value("ORANGE"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+    }
+
+    @Test
+    public void test_Get_Order_Returns_Nothing_When_No_Order_Exists() throws Exception {
+        SimpleModule module = new SimpleModule();
+        module.addSerializer(BigDecimal.class, new ToStringSerializer());
+        objectMapper.registerModule(module);
+
+
+        when(orderService.getOrder(1000)).thenReturn(null);
+
+
+        this.mockMvc.perform(
+                        get("/orders/order/1000")
+                                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound())
                 .andReturn();
     }
 
