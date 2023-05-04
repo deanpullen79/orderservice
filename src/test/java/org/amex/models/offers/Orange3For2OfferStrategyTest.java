@@ -1,14 +1,13 @@
 package org.amex.models.offers;
 
-import org.amex.models.FruitProduct;
-import org.amex.models.OrderLine;
+import org.amex.models.Product;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Orange3For2OfferStrategyTest {
 
@@ -16,21 +15,21 @@ public class Orange3For2OfferStrategyTest {
 
     @Test
     public void test_getOfferCost_forOrange3for2_with_2_Oranges() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
 
         BigDecimal result = orange3For2OfferStrategy.getOfferCost(orderLineList);
 
-        assertEquals(new BigDecimal("0.85"), result);
+        assertEquals(new BigDecimal("0.50"), result);
     }
 
     @Test
     public void test_getOfferCost_forOrange3for2_with_3_Oranges() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
 
         BigDecimal result = orange3For2OfferStrategy.getOfferCost(orderLineList);
 
@@ -39,11 +38,11 @@ public class Orange3For2OfferStrategyTest {
 
     @Test
     public void test_getOfferCost_forOrange3for2_with_3_Oranges_1_Apple() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.APPLE);
 
         BigDecimal result = orange3For2OfferStrategy.getOfferCost(orderLineList);
 
@@ -52,8 +51,8 @@ public class Orange3For2OfferStrategyTest {
 
     @Test
     public void test_getOfferCost_forOrange3for2_with_1_Apple() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
 
         BigDecimal result = orange3For2OfferStrategy.getOfferCost(orderLineList);
 
@@ -62,10 +61,10 @@ public class Orange3For2OfferStrategyTest {
 
     @Test
     public void test_getOfferCost_forOrange3for2_with_2_Apples_1_Orange() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.ORANGE);
 
         BigDecimal result = orange3For2OfferStrategy.getOfferCost(orderLineList);
 
@@ -74,7 +73,7 @@ public class Orange3For2OfferStrategyTest {
 
     @Test
     public void test_getOfferCost_with_empty_orders() {
-        List<OrderLine> orderLineList = new ArrayList<>();
+        List<Product> orderLineList = new ArrayList<>();
 
         BigDecimal result = orange3For2OfferStrategy.getOfferCost(orderLineList);
 

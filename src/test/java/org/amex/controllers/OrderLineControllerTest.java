@@ -2,9 +2,8 @@ package org.amex.controllers;
 
 import org.amex.controllers.requests.OrderRequest;
 import org.amex.controllers.responses.GetOrdersResponse;
-import org.amex.models.FruitProduct;
-import org.amex.models.OrderLine;
-import org.amex.models.Orders;
+import org.amex.models.Order;
+import org.amex.models.Product;
 import org.amex.models.offers.*;
 import org.amex.repo.OrderRepository;
 import org.amex.service.OrderService;
@@ -38,26 +37,26 @@ public class OrderLineControllerTest {
         OrderController orderController = new OrderController(new OrderService(orderRepository, offerStrategies));
 
 
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.ORANGE);
 
         OrderRequest orderRequest = new OrderRequest(orderLineList);
 
-        when(orderRepository.saveOrder(new BigDecimal("0.85"), orderLineList)).thenReturn(new Orders(1000, new BigDecimal("0.85"), orderLineList));
+        when(orderRepository.saveOrder(new BigDecimal("0.85"), orderLineList)).thenReturn(new Order(1000, new BigDecimal("0.85"), orderLineList));
 
         ResponseEntity<GetOrdersResponse> response = orderController.postOrder(orderRequest);
 
         GetOrdersResponse getOrdersResponse = response.getBody();
-        List<OrderLine> orderLineResponse = getOrdersResponse.getOrderList();
+        List<Product> orderLineResponse = getOrdersResponse.getProducts();
 
         assertEquals(2, orderLineResponse.size());
 
-        Optional<OrderLine> order = orderLineResponse.stream().filter(o -> o.getFruitProduct().equals(FruitProduct.APPLE)).findFirst();
+        Optional<Product> order = orderLineResponse.stream().filter(o -> o.equals(Product.APPLE)).findFirst();
         assertTrue(order.isPresent());
         assertEquals(order.get().getPrice(), new BigDecimal("0.60"));
 
-        Optional<OrderLine> order2 = orderLineResponse.stream().filter(o -> o.getFruitProduct().equals(FruitProduct.ORANGE)).findFirst();
+        Optional<Product> order2 = orderLineResponse.stream().filter(o -> o.equals(Product.ORANGE)).findFirst();
         assertTrue(order2.isPresent());
         assertEquals(order2.get().getPrice(), new BigDecimal("0.25"));
 
@@ -72,21 +71,21 @@ public class OrderLineControllerTest {
         OrderController orderController = new OrderController(new OrderService(orderRepository, offerStrategies));
 
 
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
 
         OrderRequest orderRequest = new OrderRequest(orderLineList);
 
-        when(orderRepository.saveOrder(new BigDecimal("1.10"), orderLineList)).thenReturn(new Orders(1000, new BigDecimal("1.10"), orderLineList));
+        when(orderRepository.saveOrder(new BigDecimal("1.10"), orderLineList)).thenReturn(new Order(1000, new BigDecimal("1.10"), orderLineList));
 
         ResponseEntity<GetOrdersResponse> response = orderController.postOrder(orderRequest);
 
         GetOrdersResponse getOrdersResponse = response.getBody();
-        List<OrderLine> orderLineResponse = getOrdersResponse.getOrderList();
+        List<Product> orderLineResponse = getOrdersResponse.getProducts();
 
         assertEquals(5, orderLineResponse.size());
 
@@ -101,19 +100,19 @@ public class OrderLineControllerTest {
         OrderController orderController = new OrderController(new OrderService(orderRepository, offerStrategies));
 
 
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
 
-        when(orderRepository.findOrder(1000)).thenReturn(new Orders(1000, new BigDecimal("1.10"), orderLineList));
+        when(orderRepository.findOrder(1000)).thenReturn(new Order(1000, new BigDecimal("1.10"), orderLineList));
 
         ResponseEntity<GetOrdersResponse> response = orderController.getOrder(1000);
 
         GetOrdersResponse getOrdersResponse = response.getBody();
-        List<OrderLine> orderLineResponse = getOrdersResponse.getOrderList();
+        List<Product> orderLineResponse = getOrdersResponse.getProducts();
 
         assertEquals(5, orderLineResponse.size());
 

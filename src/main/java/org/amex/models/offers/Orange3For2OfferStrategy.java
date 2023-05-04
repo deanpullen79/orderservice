@@ -1,10 +1,8 @@
 package org.amex.models.offers;
 
-import org.amex.models.FruitProduct;
-import org.amex.models.OrderLine;
+import org.amex.models.Product;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 /**
@@ -13,12 +11,12 @@ import java.util.List;
 public class Orange3For2OfferStrategy implements OfferStrategy {
 
     @Override
-    public BigDecimal getOfferCost(final List<OrderLine> orderLineList) {
+    public BigDecimal getOfferCost(final List<Product> products) {
 
         // Get apples only and store price for each in a list
-        List<BigDecimal> orderLines = orderLineList.stream()
-                .filter(o -> o.getFruitProduct().equals(FruitProduct.ORANGE))
-                .map(OrderLine::getPrice)
+        List<BigDecimal> orderLines = products.stream()
+                .filter(o -> o.equals(Product.ORANGE))
+                .map(Product::getPrice)
                 .toList();
 
         // Only charge for the first two of three

@@ -1,7 +1,6 @@
 package org.amex.models.offers;
 
-import org.amex.models.FruitProduct;
-import org.amex.models.OrderLine;
+import org.amex.models.Product;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,12 +11,12 @@ import java.util.List;
 public class AppleBogofOfferStrategy implements OfferStrategy {
 
     @Override
-    public BigDecimal getOfferCost(final List<OrderLine> orderLineList) {
+    public BigDecimal getOfferCost(final List<Product> products) {
 
         // Get apples only and store price for each in a list
-        List<BigDecimal> orderLines = orderLineList.stream()
-                .filter(o -> o.getFruitProduct().equals(FruitProduct.APPLE))
-                .map(OrderLine::getPrice)
+        List<BigDecimal> orderLines = products.stream()
+                .filter(o -> o.equals(Product.APPLE))
+                .map(Product::getPrice)
                 .toList();
 
         // Only store where i is odd price, to achieve Bogof

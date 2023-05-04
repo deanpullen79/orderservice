@@ -1,7 +1,6 @@
 package org.amex.models.offers;
 
-import org.amex.models.FruitProduct;
-import org.amex.models.OrderLine;
+import org.amex.models.Product;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,11 +11,11 @@ import java.util.List;
 public class OrangeNoOfferStrategy implements OfferStrategy {
 
     @Override
-    public BigDecimal getOfferCost(final List<OrderLine> orderLineList) {
+    public BigDecimal getOfferCost(final List<Product> products) {
 
-        return orderLineList.stream()
-                .filter(o -> o.getFruitProduct().equals(FruitProduct.ORANGE))
-                .map(OrderLine::getPrice)
+        return products.stream()
+                .filter(o -> o.equals(Product.ORANGE))
+                .map(Product::getPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

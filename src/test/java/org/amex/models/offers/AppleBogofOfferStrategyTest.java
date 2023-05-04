@@ -1,14 +1,13 @@
 package org.amex.models.offers;
 
-import org.amex.models.FruitProduct;
-import org.amex.models.OrderLine;
+import org.amex.models.Product;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AppleBogofOfferStrategyTest {
 
@@ -16,8 +15,8 @@ public class AppleBogofOfferStrategyTest {
 
     @Test
     public void test_Get_Offer_Cost_For_AppleBogof_with_1_Apple() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
 
         BigDecimal result = appleBogofOfferStrategy.getOfferCost(orderLineList);
 
@@ -26,9 +25,9 @@ public class AppleBogofOfferStrategyTest {
     
     @Test
     public void test_Get_Offer_Cost_For_AppleBogof_with_2_Apples() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.APPLE);
 
         BigDecimal result = appleBogofOfferStrategy.getOfferCost(orderLineList);
 
@@ -37,10 +36,10 @@ public class AppleBogofOfferStrategyTest {
 
     @Test
     public void test_Get_Offer_Cost_For_AppleBogof_with_3_Apples() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.APPLE);
 
         BigDecimal result = appleBogofOfferStrategy.getOfferCost(orderLineList);
 
@@ -50,11 +49,11 @@ public class AppleBogofOfferStrategyTest {
 
     @Test
     public void test_Get_Offer_Cost_For_AppleBogof_with_3_Oranges_1_Apple() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.APPLE);
 
         BigDecimal result = appleBogofOfferStrategy.getOfferCost(orderLineList);
 
@@ -63,8 +62,8 @@ public class AppleBogofOfferStrategyTest {
 
     @Test
     public void test_Get_Offer_Cost_For_AppleBogof_with_1_Orange() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.ORANGE);
 
         BigDecimal result = appleBogofOfferStrategy.getOfferCost(orderLineList);
 
@@ -74,10 +73,10 @@ public class AppleBogofOfferStrategyTest {
 
     @Test
     public void test_Get_Offer_Cost_For_AppleBogof_with_2_Apples_1_Orange() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.ORANGE);
 
         BigDecimal result = appleBogofOfferStrategy.getOfferCost(orderLineList);
 
@@ -86,7 +85,7 @@ public class AppleBogofOfferStrategyTest {
 
     @Test
     public void test_getOfferCost_with_empty_orders() {
-        List<OrderLine> orderLineList = new ArrayList<>();
+        List<Product> orderLineList = new ArrayList<>();
 
         BigDecimal result = appleBogofOfferStrategy.getOfferCost(orderLineList);
 

@@ -1,12 +1,13 @@
 package org.amex.controllers;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.amex.controllers.requests.OrderRequest;
-import org.amex.models.FruitProduct;
-import org.amex.models.OrderLine;
-import org.amex.models.Orders;
+import org.amex.models.Order;
+import org.amex.models.Product;
 import org.amex.service.OrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,14 +59,16 @@ public class OrderLineControllerFunctionalTest {
         SimpleModule module = new SimpleModule();
         module.addSerializer(BigDecimal.class, new ToStringSerializer());
         objectMapper.registerModule(module);
+        objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING);
+        objectMapper.enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING);
 
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.ORANGE);
 
 
-        Orders orders = new Orders(new BigDecimal("0.85"), orderLineList);
-        when(orderService.createOrder(orderLineList)).thenReturn(orders);
+        Order order = new Order(new BigDecimal("0.85"), orderLineList);
+        when(orderService.createOrder(orderLineList)).thenReturn(order);
 
 
         OrderRequest orderRequest = new OrderRequest(orderLineList);
@@ -74,13 +77,11 @@ public class OrderLineControllerFunctionalTest {
                                 .content(asJsonString(orderRequest))
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
-
+//{"totalOrderCost":"0.85","products":["Product{name='Apple', price=0.60}","Product{name='Orange', price=0.25}"]}
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalOrderCost").value("0.85"))
-                .andExpect(jsonPath("$.orderList[0].price").value("0.60"))
-                .andExpect(jsonPath("$.orderList[0].fruitProduct").value("APPLE"))
-                .andExpect(jsonPath("$.orderList[1].price").value("0.25"))
-                .andExpect(jsonPath("$.orderList[1].fruitProduct").value("ORANGE"))
+                .andExpect(jsonPath("$.products[0]").value("Product{name='Apple', price=0.60}"))
+                .andExpect(jsonPath("$.products[1]").value("Product{name='Orange', price=0.25}"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
     }
@@ -91,13 +92,13 @@ public class OrderLineControllerFunctionalTest {
         module.addSerializer(BigDecimal.class, new ToStringSerializer());
         objectMapper.registerModule(module);
 
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.ORANGE);
 
 
-        Orders orders = new Orders(new BigDecimal("0.85"), orderLineList);
-        when(orderService.getOrder(1000)).thenReturn(orders);
+        Order order = new Order(new BigDecimal("0.85"), orderLineList);
+        when(orderService.getOrder(1000)).thenReturn(order);
 
 
         this.mockMvc.perform(
@@ -105,10 +106,8 @@ public class OrderLineControllerFunctionalTest {
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.totalOrderCost").value("0.85"))
-                .andExpect(jsonPath("$.orderList[0].price").value("0.60"))
-                .andExpect(jsonPath("$.orderList[0].fruitProduct").value("APPLE"))
-                .andExpect(jsonPath("$.orderList[1].price").value("0.25"))
-                .andExpect(jsonPath("$.orderList[1].fruitProduct").value("ORANGE"))
+                .andExpect(jsonPath("$.products[0]").value("Product{name='Apple', price=0.60}"))
+                .andExpect(jsonPath("$.products[1]").value("Product{name='Orange', price=0.25}"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andReturn();
     }

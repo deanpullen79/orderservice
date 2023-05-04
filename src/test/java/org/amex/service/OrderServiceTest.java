@@ -1,8 +1,7 @@
 package org.amex.service;
 
-import org.amex.models.FruitProduct;
-import org.amex.models.OrderLine;
-import org.amex.models.Orders;
+import org.amex.models.Order;
+import org.amex.models.Product;
 import org.amex.models.offers.*;
 import org.amex.repo.OrderRepository;
 import org.junit.jupiter.api.Test;
@@ -31,16 +30,16 @@ public class OrderServiceTest {
 
         OrderService orderService = new OrderService(orderRepository, offerStrategies);
 
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> products = new ArrayList<>();
+        products.add(Product.APPLE);
+        products.add(Product.ORANGE);
 
-        Orders ordersPassedIn = new Orders(new BigDecimal("0.85"), orderLineList);
-        when(orderRepository.saveOrder(new BigDecimal("0.85"), orderLineList)).thenReturn(ordersPassedIn);
+        Order orderPassedIn = new Order(new BigDecimal("0.85"), products);
+        when(orderRepository.saveOrder(new BigDecimal("0.85"), products)).thenReturn(orderPassedIn);
 
-        Orders orders = orderService.createOrder(orderLineList);
-        assertEquals(new BigDecimal("0.85"), orders.getTotalOrderCost());
-        assertEquals(orderLineList, orders.getOrderLines());
+        Order order = orderService.createOrder(products);
+        assertEquals(new BigDecimal("0.85"), order.getTotalOrderCost());
+        assertEquals(products, order.getProducts());
     }
 
     @Test
@@ -51,18 +50,18 @@ public class OrderServiceTest {
 
         OrderService orderService = new OrderService(orderRepository, offerStrategies);
 
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+        List<Product> products = new ArrayList<>();
+        products.add(Product.APPLE);
+        products.add(Product.APPLE);
+        products.add(Product.ORANGE);
+        products.add(Product.ORANGE);
+        products.add(Product.ORANGE);
 
-        Orders orders = new Orders(new BigDecimal("1.10"), orderLineList);
-        when(orderRepository.saveOrder(new BigDecimal("1.10"), orderLineList)).thenReturn(orders);
+        Order order = new Order(new BigDecimal("1.10"), products);
+        when(orderRepository.saveOrder(new BigDecimal("1.10"), products)).thenReturn(order);
 
-        Orders ordersReturned = orderService.createOrder(orderLineList);
-        assertEquals(new BigDecimal("1.10"), ordersReturned.getTotalOrderCost());
-        assertEquals(orderLineList, ordersReturned.getOrderLines());
+        Order orderReturned = orderService.createOrder(products);
+        assertEquals(new BigDecimal("1.10"), orderReturned.getTotalOrderCost());
+        assertEquals(products, orderReturned.getProducts());
     }
 }

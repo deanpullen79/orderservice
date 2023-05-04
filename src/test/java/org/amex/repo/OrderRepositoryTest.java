@@ -1,8 +1,7 @@
 package org.amex.repo;
 
-import org.amex.models.FruitProduct;
-import org.amex.models.OrderLine;
-import org.amex.models.Orders;
+import org.amex.models.Order;
+import org.amex.models.Product;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -17,56 +16,56 @@ public class OrderRepositoryTest {
 
     @Test
     public void saveOrder() {
-        List<OrderLine> orderLineList = getOrderLines();
+        List<Product> orderLineList = getOrderLines();
 
         OrderRepository orderRepository = new OrderRepository();
-        Orders orders = orderRepository.saveOrder(new BigDecimal("1.95"), orderLineList);
+        Order order = orderRepository.saveOrder(new BigDecimal("1.95"), orderLineList);
 
-        assertEquals(1, orders.getOrderId());
-        assertEquals(orderLineList, orders.getOrderLines());
+        assertEquals(1, order.getOrderId());
+        assertEquals(orderLineList, order.getProducts());
     }
 
     @Test
     public void findOrder() {
-        List<OrderLine> orderLineList = getOrderLines();
+        List<Product> orderLineList = getOrderLines();
 
         OrderRepository orderRepository = new OrderRepository();
-        Orders orders = orderRepository.saveOrder(new BigDecimal("1.95"), orderLineList);
+        Order order = orderRepository.saveOrder(new BigDecimal("1.95"), orderLineList);
 
-        Orders ordersReturn = orderRepository.findOrder(orders.getOrderId());
-        assertEquals(orderLineList, ordersReturn.getOrderLines());
-        assertEquals(1, ordersReturn.getOrderId());
+        Order orderReturn = orderRepository.findOrder(order.getOrderId());
+        assertEquals(orderLineList, orderReturn.getProducts());
+        assertEquals(1, orderReturn.getOrderId());
     }
 
     @Test
     public void find_No_Order() {
         OrderRepository orderRepository = new OrderRepository();
-        Orders orders = orderRepository.findOrders().get(1000L);
+        Order order = orderRepository.findOrders().get(1000L);
 
-        assertNull(orders);
+        assertNull(order);
     }
 
     @Test
     public void findOrders() {
-        List<OrderLine> orderLineList = getOrderLines();
+        List<Product> orderLineList = getOrderLines();
 
         OrderRepository orderRepository = new OrderRepository();
-        Orders orders1 = orderRepository.saveOrder(new BigDecimal("1.95"), orderLineList);
-        Orders orders2 = orderRepository.saveOrder(new BigDecimal("2.95"), orderLineList);
+        Order order1 = orderRepository.saveOrder(new BigDecimal("1.95"), orderLineList);
+        Order order2 = orderRepository.saveOrder(new BigDecimal("2.95"), orderLineList);
 
-        Map<Long, Orders> allOrders = orderRepository.findOrders();
+        Map<Long, Order> allOrders = orderRepository.findOrders();
 
-        assertEquals(orders1, allOrders.get(orders1.getOrderId()));
-        assertEquals(orders2, allOrders.get(orders2.getOrderId()));
+        assertEquals(order1, allOrders.get(order1.getOrderId()));
+        assertEquals(order2, allOrders.get(order2.getOrderId()));
     }
 
-    private static List<OrderLine> getOrderLines() {
-        List<OrderLine> orderLineList = new ArrayList<>();
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.60"), FruitProduct.APPLE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
-        orderLineList.add(new OrderLine(new BigDecimal("0.25"), FruitProduct.ORANGE));
+    private static List<Product> getOrderLines() {
+        List<Product> orderLineList = new ArrayList<>();
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.APPLE);
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
+        orderLineList.add(Product.ORANGE);
         return orderLineList;
     }
 

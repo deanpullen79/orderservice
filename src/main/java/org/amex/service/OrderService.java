@@ -1,7 +1,7 @@
 package org.amex.service;
 
-import org.amex.models.OrderLine;
-import org.amex.models.Orders;
+import org.amex.models.Order;
+import org.amex.models.Product;
 import org.amex.models.offers.OfferStrategy;
 import org.amex.repo.OrderRepository;
 import org.springframework.stereotype.Service;
@@ -23,22 +23,22 @@ public class OrderService {
         this.offerStrategies = offerStrategies;
     }
 
-    public Orders createOrder(final List<OrderLine> orderLineList) {
+    public Order createOrder(final List<Product> products) {
 
         BigDecimal totalCost = BigDecimal.ZERO;
         for (final OfferStrategy offerStrategy : offerStrategies) {
-            final BigDecimal offerCost = offerStrategy.getOfferCost(orderLineList);
+            final BigDecimal offerCost = offerStrategy.getOfferCost(products);
             totalCost = totalCost.add(offerCost);
         }
 
-        return orderRepository.saveOrder(totalCost, List.copyOf(orderLineList));
+        return orderRepository.saveOrder(totalCost, List.copyOf(products));
     }
 
-    public Orders getOrder(final long orderId) {
+    public Order getOrder(final long orderId) {
         return orderRepository.findOrder(orderId);
     }
 
-    public Map<Long, Orders> getAllOrders() {
+    public Map<Long, Order> getAllOrders() {
         return orderRepository.findOrders();
     }
 }

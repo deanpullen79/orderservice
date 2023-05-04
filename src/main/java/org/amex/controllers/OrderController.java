@@ -3,7 +3,7 @@ package org.amex.controllers;
 import org.amex.controllers.requests.OrderRequest;
 import org.amex.controllers.responses.GetAllOrdersResponse;
 import org.amex.controllers.responses.GetOrdersResponse;
-import org.amex.models.Orders;
+import org.amex.models.Order;
 import org.amex.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,8 +33,8 @@ public class OrderController {
     @PostMapping(path = "/order", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetOrdersResponse> postOrder(final @RequestBody OrderRequest orderRequest) {
 
-        final Orders orders = orderService.createOrder(orderRequest.getOrderList());
-        final GetOrdersResponse response = new GetOrdersResponse(orders.getTotalOrderCost(), orders.getOrderLines());
+        final Order order = orderService.createOrder(orderRequest.getProducts());
+        final GetOrdersResponse response = new GetOrdersResponse(order.getTotalOrderCost(), order.getProducts());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -48,11 +48,11 @@ public class OrderController {
     @GetMapping(path = "/order/{orderId}")
     public ResponseEntity<GetOrdersResponse> getOrder(final @PathVariable long orderId) {
 
-        final Orders orders = orderService.getOrder(orderId);
-        if (orders == null) {
+        final Order order = orderService.getOrder(orderId);
+        if (order == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        final GetOrdersResponse response = new GetOrdersResponse(orders.getTotalOrderCost(), orders.getOrderLines());
+        final GetOrdersResponse response = new GetOrdersResponse(order.getTotalOrderCost(), order.getProducts());
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -65,7 +65,7 @@ public class OrderController {
     @GetMapping(path = "/orders")
     public ResponseEntity<GetAllOrdersResponse> getAllOrders() {
 
-        final Map<Long, Orders> orders = orderService.getAllOrders();
+        final Map<Long, Order> orders = orderService.getAllOrders();
 
         final GetAllOrdersResponse response = new GetAllOrdersResponse(orders);
 
