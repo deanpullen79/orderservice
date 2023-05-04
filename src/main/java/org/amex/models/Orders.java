@@ -10,10 +10,9 @@ public class Orders {
 
     private final List<OrderLine> orderLineList;
 
-    private BigDecimal totalOrderCost;
+    private final BigDecimal totalOrderCost;
 
     public Orders(final BigDecimal totalOrderCost, final List<OrderLine> orderLineList) {
-        this.orderId = orderId;
         this.totalOrderCost = totalOrderCost;
         this.orderLineList = orderLineList;
     }

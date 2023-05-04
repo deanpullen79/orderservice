@@ -21,17 +21,8 @@ public class OrderLine {
         return price;
     }
 
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
     public FruitProduct getFruitProduct() {
         return fruitProduct;
-    }
-
-    public void setFruitProduct(FruitProduct fruitProduct) {
-        this.fruitProduct = fruitProduct;
     }
 
     @Override

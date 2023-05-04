@@ -17,7 +17,7 @@ import java.util.Map;
 @RequestMapping("/orders")
 public class OrderController {
 
-    private OrderService orderService;
+    private final OrderService orderService;
 
     public OrderController(@Autowired OrderService orderService) {
         this.orderService = orderService;
@@ -25,7 +25,6 @@ public class OrderController {
 
     /**
      * Restful API interface to post an order to the system, via a collection of Order's
-     *
      * We only represent the happy path for the sake of the demo
      *
      * @param orderRequest the underlying json body comprising a list of Order's
